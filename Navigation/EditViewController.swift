@@ -8,7 +8,9 @@
 import UIKit
 // 인터페이스 처럼 사용 되는 protocol
 protocol EditDelegate {
+    // 메인 뷰에서 수정 뷰 데이터 받기위한 함수
     func didMessageEditDone(_ controller: EditViewController, message: String)
+    func didImageOnOffDone(_ controller: EditViewController, isOn: Bool)
 }
 
 class EditViewController: UIViewController {
@@ -21,6 +23,9 @@ class EditViewController: UIViewController {
     var delegate: EditDelegate?
     @IBOutlet var txtMessage: UITextField!
     
+    @IBOutlet var swlsOn: UISwitch!
+    
+    var isOn = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +33,8 @@ class EditViewController: UIViewController {
         // Do any additional setup after loading the view.
         // Main에서 직접 뷰에 접근 못하기 때문에 텍스트 변수에 데이터 전달
         txtMessage.text = textMessage
+        // 처음 false로 설정
+        swlsOn.isOn = isOn
     }
     
     // 버튼 클릭 시 navigationController를 사용 하여 현재 화면을 pop
@@ -35,10 +42,23 @@ class EditViewController: UIViewController {
         // btnDone 버튼 클릭시 deletgate 있으면 didMessageEdiotDone 함수 호출(자신과 자신의 UITextField에 적혀진 text 전달
         if delegate != nil {
             delegate?.didMessageEditDone(self, message: txtMessage.text!)
+            delegate?.didImageOnOffDone(self, isOn: isOn)
         }
         
         _ = navigationController?.popViewController(animated: true)
     }
+    
+    
+    @IBAction func swImageOnOff(_ sender: UISwitch) {
+        if sender.isOn {
+            isOn = true
+        } else {
+            isOn = false
+        }
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
 
