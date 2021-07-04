@@ -11,6 +11,7 @@ protocol EditDelegate {
     // 메인 뷰에서 수정 뷰 데이터 받기위한 함수
     func didMessageEditDone(_ controller: EditViewController, message: String)
     func didImageOnOffDone(_ controller: EditViewController, isOn: Bool)
+    func didResizeOnOffDone(_ controller: EditViewController, isZoom: Bool)
 }
 
 class EditViewController: UIViewController {
@@ -23,9 +24,11 @@ class EditViewController: UIViewController {
     var delegate: EditDelegate?
     @IBOutlet var txtMessage: UITextField!
     
+    @IBOutlet var lblResize: UIButton!
     @IBOutlet var swlsOn: UISwitch!
     
     var isOn = false
+    var isZoom = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +38,11 @@ class EditViewController: UIViewController {
         txtMessage.text = textMessage
         // 처음 false로 설정
         swlsOn.isOn = isOn
+        if (isZoom) {
+            lblResize.setTitle("확대", for: .normal)
+        }else {
+            lblResize.setTitle("축소", for: .normal)
+        }
     }
     
     // 버튼 클릭 시 navigationController를 사용 하여 현재 화면을 pop
@@ -43,6 +51,7 @@ class EditViewController: UIViewController {
         if delegate != nil {
             delegate?.didMessageEditDone(self, message: txtMessage.text!)
             delegate?.didImageOnOffDone(self, isOn: isOn)
+            delegate?.didResizeOnOffDone(self, isZoom: isZoom)
         }
         
         _ = navigationController?.popViewController(animated: true)
@@ -58,6 +67,15 @@ class EditViewController: UIViewController {
     }
     
     
+    @IBAction func btnResize(_ sender: UIButton) {
+        if (isZoom) {
+            isZoom = false
+            lblResize.setTitle("축소", for:.normal)
+        } else {
+            isZoom = true
+            lblResize.setTitle("확대", for: .normal)
+        }
+    }
     
     /*
     // MARK: - Navigation

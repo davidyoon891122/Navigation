@@ -15,6 +15,10 @@ class ViewController: UIViewController, EditDelegate {
     let imgOff = UIImage(named: "lamp_off.png")
     
     var isOn = true
+    // 전구 확대 축소 설정하는 변수
+    var isZoom = false
+    // EditView에 보내기 전에 전구 확대 축소 설정 변수
+    var oriZoom = false
     
     
     override func viewDidLoad() {
@@ -35,6 +39,8 @@ class ViewController: UIViewController, EditDelegate {
         editViewController.textMessage = txtMessage.text!
         //editViewContoller의 isOn 변수에 MainView isOn 값 넘김
         editViewController.isOn = isOn
+        // 확대 축소 오리지날 값 editView에 전달
+        editViewController.isZoom = oriZoom
         //editViewController.delegate에 자신 선언
         editViewController.delegate = self
     }
@@ -52,6 +58,35 @@ class ViewController: UIViewController, EditDelegate {
             imageView.image = imgOff
             self.isOn = false
         }
+    }
+    
+    func didResizeOnOffDone(_ controller: EditViewController, isZoom: Bool) {
+        let scale: CGFloat = 2.0
+        var newWidth: CGFloat, newHeight: CGFloat
+        if (isZoom) {
+            if oriZoom {
+                
+            } else {
+                //self.isZoom = false
+                self.oriZoom = true
+                newWidth = imageView.frame.width * scale
+                newHeight = imageView.frame.height * scale
+                imageView.frame.size = CGSize(width: newWidth, height: newHeight)
+            }
+        } else {
+            if oriZoom {
+                //self.isZoom = true
+                self.oriZoom = false
+                newWidth = imageView.frame.width / scale
+                newHeight = imageView.frame.height / scale
+                imageView.frame.size = CGSize(width: newWidth, height: newHeight)
+            } else {
+                
+            }
+            
+        }
+        
+        
     }
 }
 
